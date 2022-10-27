@@ -5,6 +5,7 @@ test/*.*
 !test/*.js
 !test/**/webpack.config.js
 !test/**/deprecations.js
+debug/**
 
 # Ignore example fixtures
 examples/*.*
@@ -12,3 +13,6 @@ examples/*.*
 
 # Ignore generated files
 *.check.js
+
+
+study/**/dist

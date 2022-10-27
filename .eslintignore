@@ -4,7 +4,7 @@ node_modules
 # Ignore some folders
 benchmark
 coverage
-
+debug/**
 # Ignore not supported files
 !.*.js
 .eslintrc.js
@@ -25,3 +25,6 @@ test/*Cases/**/*.js
 examples/**/*.js
 !examples/*/webpack.config.js
 
+
+study
+debug
