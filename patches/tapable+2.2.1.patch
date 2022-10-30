@@ -1,0 +1,122 @@
+diff --git a/node_modules/tapable/lib/Hook.js b/node_modules/tapable/lib/Hook.js
+index db04426..c8dd31d 100644
+--- a/node_modules/tapable/lib/Hook.js
++++ b/node_modules/tapable/lib/Hook.js
+@@ -11,6 +11,8 @@ const deprecateContext = util.deprecate(() => {},
+ 
+ const CALL_DELEGATE = function(...args) {
+ 	this.call = this._createCall("sync");
++	// 这里把this.call 换成 this.compile了
++	// this.compile了 返回了一个函数 并且这个函数执行的时候 this 还是指向当前hook
+ 	return this.call(...args);
+ };
+ const CALL_ASYNC_DELEGATE = function(...args) {
+@@ -35,7 +37,7 @@ class Hook {
+ 		this._promise = PROMISE_DELEGATE;
+ 		this.promise = PROMISE_DELEGATE;
+ 		this._x = undefined;
+-
++		// 把原型上的值赋值到当前对象上
+ 		this.compile = this.compile;
+ 		this.tap = this.tap;
+ 		this.tapAsync = this.tapAsync;
+@@ -43,16 +45,19 @@ class Hook {
+ 	}
+ 
+ 	compile(options) {
++		// 必须被重写，否则报错
++		// 用来调用 HookCodeFactory 中的 create 方法
+ 		throw new Error("Abstract: should be overridden");
+ 	}
+ 
+ 	_createCall(type) {
+-		return this.compile({
++		const fn = this.compile({
+ 			taps: this.taps,
+ 			interceptors: this.interceptors,
+ 			args: this._args,
+ 			type: type
+ 		});
++		return fn;
+ 	}
+ 
+ 	_tap(type, options, fn) {
+@@ -148,6 +153,7 @@ class Hook {
+ 		let i = this.taps.length;
+ 		while (i > 0) {
+ 			i--;
++			// TODO:倒序遍历，这个是为了做啥，不知道
+ 			const x = this.taps[i];
+ 			this.taps[i + 1] = x;
+ 			const xStage = x.stage || 0;
+diff --git a/node_modules/tapable/lib/HookCodeFactory.js b/node_modules/tapable/lib/HookCodeFactory.js
+index c9f5340..082afbf 100644
+--- a/node_modules/tapable/lib/HookCodeFactory.js
++++ b/node_modules/tapable/lib/HookCodeFactory.js
+@@ -16,18 +16,23 @@ class HookCodeFactory {
+ 		let fn;
+ 		switch (this.options.type) {
+ 			case "sync":
++
++				const args = this.args()
++				const header = this.header();
++				const _content = this.contentWithInterceptors({
++					onError: err => `throw ${err};\n`,
++					onResult: result => `return ${result};\n`,
++					resultReturns: true,
++					onDone: () => "",
++					rethrowIfPossible: true
++				})
+ 				fn = new Function(
+-					this.args(),
++					args,
+ 					'"use strict";\n' +
+-						this.header() +
+-						this.contentWithInterceptors({
+-							onError: err => `throw ${err};\n`,
+-							onResult: result => `return ${result};\n`,
+-							resultReturns: true,
+-							onDone: () => "",
+-							rethrowIfPossible: true
+-						})
++					header +
++					_content
+ 				);
++				console.log(fn)
+ 				break;
+ 			case "async":
+ 				fn = new Function(
+@@ -87,6 +92,7 @@ class HookCodeFactory {
+ 	 * @param {{ type: "sync" | "promise" | "async", taps: Array<Tap>, interceptors: Array<Interceptor> }} options
+ 	 */
+ 	init(options) {
++		// 把执行的参数和函数存储
+ 		this.options = options;
+ 		this._args = options.args.slice();
+ 	}
+diff --git a/node_modules/tapable/lib/SyncBailHook.js b/node_modules/tapable/lib/SyncBailHook.js
+index bdd5b45..fda496b 100644
+--- a/node_modules/tapable/lib/SyncBailHook.js
++++ b/node_modules/tapable/lib/SyncBailHook.js
+@@ -9,6 +9,7 @@ const HookCodeFactory = require("./HookCodeFactory");
+ 
+ class SyncBailHookCodeFactory extends HookCodeFactory {
+ 	content({ onError, onResult, resultReturns, onDone, rethrowIfPossible }) {
++		// 比同步的钩子多了onResult 和 resultReturns
+ 		return this.callTapsSeries({
+ 			onError: (i, err) => onError(err),
+ 			onResult: (i, result, next) =>
+diff --git a/node_modules/tapable/lib/SyncHook.js b/node_modules/tapable/lib/SyncHook.js
+index e2512be..45f34a2 100644
+--- a/node_modules/tapable/lib/SyncHook.js
++++ b/node_modules/tapable/lib/SyncHook.js
+@@ -27,7 +27,8 @@ const TAP_PROMISE = () => {
+ 	throw new Error("tapPromise is not supported on a SyncHook");
+ };
+ 
+-const COMPILE = function(options) {
++const COMPILE = function (options) {
++	// this 指的 Hook的实例
+ 	factory.setup(this, options);
+ 	return factory.create(options);
+ };

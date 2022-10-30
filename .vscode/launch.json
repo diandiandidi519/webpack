@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/debug/start.js",
+      "program": "${workspaceFolder}/study/tapable/index.js",
       // 输出
       "console": "integratedTerminal"
     }
