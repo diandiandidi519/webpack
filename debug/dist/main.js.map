@@ -1,1 +1,0 @@
-{"version":3,"file":"main.js","mappings":";;;;;AAAA;AACA;AACA;;AAEA","sources":["webpack:///./src/index.js"],"sourcesContent":["// import is from 'object.is'  // 这里引入一个小而美的第三方库，以此观察webpack如何处理第三方包\n// console.log('很高兴认识你，webpack')\n// console.log(is(1,1))\n\nconsole.log(\"----\");\n"],"names":[],"sourceRoot":""}

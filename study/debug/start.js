@@ -1,5 +1,5 @@
 // 引入webpack某块
-const webpack = require("../lib/index.js");
+const webpack = require("../../lib/index.js");
 // 引入上面写的webpack配置对象
 const config = require("./webpack.config");
 // 创建一个complier对象
