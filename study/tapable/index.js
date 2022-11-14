@@ -10,6 +10,22 @@ const {
 	AsyncSeriesWaterfallHook
 } = require("tapable");
 
+// // 初始化同步钩子
+// const hook = new SyncHook(["contry", "city", "people"]);
+
+// // 注册/订阅事件
+// hook.tap("event-1", (contry, city, people) => {
+// 	console.log("event-1:", contry, city, people);
+// });
+
+// hook.tap("event-2", (contry, city, people) => {
+// 	console.log("event-2:", contry, city, people);
+// });
+
+// // 执行订阅事件回调
+// // 钩子上目前注册了 2 个回调，它们会按顺序被触发
+// hook.call("China", "Shenzhen", "VJ");
+
 // 初始化同步钩子
 const hook = new SyncHook(["contry", "city", "people"]);
 

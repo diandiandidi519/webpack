@@ -83,8 +83,8 @@
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
 /******/ 		var inProgress = {};
-/******/ 		// data-webpack is not used as build has no uniqueName
-/******/ 		// loadScript function to load a script via script tag
+/******/ 		// data-webpack is not used as build has no uniqueName 加载对应的 script 脚本
+/******/ 		// loadScript function to load a script via script tag url 指的是 script 加载的地址，done 指的是加载以后得回调函数
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
@@ -95,13 +95,13 @@
 /******/ 					if(s.getAttribute("src") == url) { script = s; break; }
 /******/ 				}
 /******/ 			}
-/******/ 			if(!script) {
+/******/ 			if(!script) {//如果找不到，就创建对应的脚本
 /******/ 				needAttach = true;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120;
-/******/ 				if (__webpack_require__.nc) {
+/******/ 				if (__webpack_require__.nc) {//TODO:未找到相关赋值
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 		
@@ -115,7 +115,7 @@
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));//加载完成以后 一个一个的遍历回调函数
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -128,7 +128,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
-/******/ 		// define __esModule on exports
+/******/ 		// define __esModule on exports 标记对象为 esm
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
@@ -139,11 +139,11 @@
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
+/******/ 		var scriptUrl; //获取 publicPath
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
 /******/ 		var document = __webpack_require__.g.document;
 /******/ 		if (!scriptUrl && document) {
-/******/ 			if (document.currentScript)
+/******/ 			if (document.currentScript)//返回当前正在运行的脚本所属的 <script> 元素。
 /******/ 				scriptUrl = document.currentScript.src
 /******/ 			if (!scriptUrl) {
 /******/ 				var scripts = document.getElementsByTagName("script");
@@ -154,7 +154,7 @@
 /******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
 /******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
 /******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 		__webpack_require__.p = scriptUrl;//从当前的 script 脚本获取加载的路径
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -164,25 +164,25 @@
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
+/******/ 		var installedChunks = {//存储打包的 chunks
 /******/ 			0: 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
-/******/ 				// JSONP chunk loading for javascript
+/******/ 				// JSONP chunk loading for javascript  判断当前模块是否在 installedChunks 里面
 /******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
-/******/ 					if(installedChunkData) {
+/******/ 					if(installedChunkData) {// 2 指的是当前 promise
 /******/ 						promises.push(installedChunkData[2]);
-/******/ 					} else {
+/******/ 					} else {//如果没有加载
 /******/ 						if(true) { // all chunks have JS
-/******/ 							// setup Promise in chunk cache
+/******/ 							// setup Promise in chunk cache  如果当前模块没有加载过，新建一个 promise 用来表示加载当前 chunk
 /******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
+/******/ 							// start chunk loading  获取当前模块对应的 url
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
@@ -196,7 +196,7 @@
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
-/******/ 										error.request = realSrc;
+/******/ 										error.request = realSrc;//加载出错了，调用 promsie 的 reject 抛出错误
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -219,13 +219,13 @@
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			var [chunkIds, moreModules, runtime] = data;//moreModules 为 self["webpackChunk"] 里面 push 进来的内容 第二个参数 ，是一个数组
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {//如果存在没有加载的模块
 /******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {//将新加入的模块加入到当前的模块中
 /******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
 /******/ 					}
 /******/ 				}
@@ -235,14 +235,14 @@
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					installedChunks[chunkId][0]();
+/******/ 					installedChunks[chunkId][0]();//依次调用各个模块的 resolve 函数，代表加载成功
 /******/ 				}
 /******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];//获取存储的模块
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 						// chunkLoadingGlobal.push = (...args) => {
@@ -259,7 +259,7 @@ var __webpack_exports__ = {};
 //
 // import _ from 'lodash'
 // console.log(_.get)
-
+// 加载所有的模块，加载以后调用执行
 __webpack_require__.e(/* import() */ 1).then(__webpack_require__.bind(__webpack_require__, 1)).then(m => {
 	console.log(m.default(3, 4));
 });
