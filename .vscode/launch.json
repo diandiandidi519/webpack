@@ -2,12 +2,33 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  // https://code.visualstudio.com/docs/nodejs/nodejs-debugging
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-node",
+      "name": "webpack npm",
       "request": "launch",
-      "name": "Launch Program",
+      "runtimeArgs": ["run", "debug"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "cwd": "${workspaceFolder}/study/loader"
+    },
+
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "webpack loader",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/study/loader/start.js",
+      // 输出
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/study/loader"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "webpack tapable",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/study/tapable/index.js",
       // 输出

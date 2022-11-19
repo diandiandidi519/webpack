@@ -50,10 +50,10 @@ index db04426..c8dd31d 100644
  			this.taps[i + 1] = x;
  			const xStage = x.stage || 0;
 diff --git a/node_modules/tapable/lib/HookCodeFactory.js b/node_modules/tapable/lib/HookCodeFactory.js
-index c9f5340..082afbf 100644
+index c9f5340..baf343d 100644
 --- a/node_modules/tapable/lib/HookCodeFactory.js
 +++ b/node_modules/tapable/lib/HookCodeFactory.js
-@@ -16,18 +16,23 @@ class HookCodeFactory {
+@@ -16,17 +16,21 @@ class HookCodeFactory {
  		let fn;
  		switch (this.options.type) {
  			case "sync":
@@ -82,11 +82,9 @@ index c9f5340..082afbf 100644
 +					header +
 +					_content
  				);
-+				console.log(fn)
  				break;
  			case "async":
- 				fn = new Function(
-@@ -87,6 +92,7 @@ class HookCodeFactory {
+@@ -87,6 +91,7 @@ class HookCodeFactory {
  	 * @param {{ type: "sync" | "promise" | "async", taps: Array<Tap>, interceptors: Array<Interceptor> }} options
  	 */
  	init(options) {

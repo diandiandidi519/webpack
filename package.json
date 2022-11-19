@@ -54,7 +54,7 @@
     "core-js": "^3.6.5",
     "coveralls": "^3.1.0",
     "cspell": "^4.0.63",
-    "css-loader": "^5.0.1",
+    "css-loader": "^6.7.2",
     "date-fns": "^2.15.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
@@ -99,7 +99,7 @@
     "script-loader": "^0.7.2",
     "simple-git": "^2.17.0",
     "strip-ansi": "^6.0.0",
-    "style-loader": "^2.0.0",
+    "style-loader": "^3.3.1",
     "terser": "^5.7.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.21.0",
@@ -180,7 +180,8 @@
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
-    "cover:report": "nyc report -t coverage"
+    "cover:report": "nyc report -t coverage",
+    "debug": "node --inspect=5858 ./study/loader/start.js"
   },
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
